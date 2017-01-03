@@ -7,5 +7,5 @@ package com.astra.http;
 
 public interface RequestCallback {
     void onSuccess(String content);
-    void onFail(String errorMessage);
+    void onFail(int code, String errorMessage);
 }

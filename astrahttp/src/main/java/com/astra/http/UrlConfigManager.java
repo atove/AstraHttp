@@ -39,6 +39,12 @@ class UrlConfigManager {
         }
         return null;
     }
+    public void setHost(String key, String host){
+        if (hosts == null){
+            hosts = new HashMap<>();
+        }
+        hosts.put(key, host);
+    }
 
     private ArrayList<UrlData> parse(InputStream is) throws Exception {
         ArrayList<UrlData> urlDatas = null;

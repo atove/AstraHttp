@@ -10,6 +10,7 @@ import android.util.Log;
  */
 
 public class RemoteService {
+    public static boolean isPrintLog;
     private static RemoteService mInstance;
     private UrlConfigManager urlConfigManager;
     private static String mPath;
@@ -32,6 +33,9 @@ public class RemoteService {
             }
         }
         return mInstance;
+    }
+    public void isPrintLog(Boolean isLog){
+        isPrintLog = isLog;
     }
     public Request invoke(String key){
         if (urlConfigManager == null){
