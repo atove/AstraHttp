@@ -48,7 +48,7 @@ public class RemoteService {
         return new Request(urlData);
     }
 
-    public void putHost(String key, String host){
-        urlConfigManager.setHost(key, host);
+    public void addHost(String key, String host){
+        urlConfigManager.addHost(key, host);
     }
 }

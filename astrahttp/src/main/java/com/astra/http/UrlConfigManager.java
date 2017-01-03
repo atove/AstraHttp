@@ -39,7 +39,7 @@ class UrlConfigManager {
         }
         return null;
     }
-    public void setHost(String key, String host){
+    public void addHost(String key, String host){
         if (hosts == null){
             hosts = new HashMap<>();
         }
