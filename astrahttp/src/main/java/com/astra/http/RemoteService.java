@@ -4,6 +4,8 @@ import android.content.Context;
 import android.text.TextUtils;
 import android.util.Log;
 
+import java.util.HashMap;
+
 
 /**
  * Created by Astra on 16/12/1.
@@ -44,5 +46,9 @@ public class RemoteService {
         }
         UrlData urlData = urlConfigManager.findURL(key);
         return new Request(urlData);
+    }
+
+    public void putHost(String key, String host){
+        urlConfigManager.setHost(key, host);
     }
 }
