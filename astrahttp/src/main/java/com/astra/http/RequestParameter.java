@@ -5,7 +5,7 @@ package com.astra.http;
  * Created by Astra on 16/12/1.
  */
 
-class RequestParameter {
+public class RequestParameter {
     private String key;
     private String value;
 

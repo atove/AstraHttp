@@ -5,6 +5,7 @@ import android.util.Log;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -25,10 +26,22 @@ public class Request {
     private RequestCallback requestCall;
     private UrlData urlData;
     private ArrayList<RequestParameter> requestParameters;
+    private ArrayList<RequestHeader> requestHeaders;
+    private RequestDecorate requestDecorate;
+    private String host;
 
+    public void setRequestDecorate(RequestDecorate requestDecorate) {
+        this.requestDecorate = requestDecorate;
+    }
 
     protected Request(UrlData urlData) {
         this.urlData = urlData;
+        if (RemoteService.getInstance().requestDecorateHashMap != null){
+            this.requestDecorate = RemoteService.getInstance().requestDecorateHashMap.get(urlData.getDecorateType());
+        }
+        if (RemoteService.getInstance().hosts != null){
+            this.host = RemoteService.getInstance().hosts.get(urlData.getHost());
+        }
     }
 
     public String getTag() {
@@ -53,6 +66,14 @@ public class Request {
         requestParameters.add(parameter);
         return this;
     }
+    public Request addHeader(String name, String value) {
+        if (requestHeaders == null){
+            requestHeaders = new ArrayList<>();
+        }
+        RequestHeader parameter = new RequestHeader(name, value);
+        requestHeaders.add(parameter);
+        return this;
+    }
 
     private File file;
     public Request setFile(File file){
@@ -66,11 +87,14 @@ public class Request {
     }
 
     public void start(){
+        if (requestDecorate != null){
+            requestDecorate.setRequestParameters(requestParameters);
+        }
         OkHttpClient okHttpClient = new OkHttpClient();
         okhttp3.Request.Builder builder = new okhttp3.Request.Builder()
-                .url(urlData.getUrl());
+                .url(host + urlData.getUrl());
         if (RemoteService.isPrintLog){
-            Log.d("请求地址" + urlData.getNetType(), urlData.getUrl());
+            Log.d("请求地址" + urlData.getNetType(), host + urlData.getUrl());
         }
         switch (urlData.getNetType()){
             case "get" :
@@ -80,6 +104,35 @@ public class Request {
             case "post" :
 
                 MultipartBody.Builder multipartBodybuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
+
+                if (requestHeaders != null){
+                    for (RequestHeader requestHeader : requestHeaders){
+                        builder.addHeader(requestHeader.getKey(), requestHeader.getValue());
+                    }
+                }
+
+                if (requestDecorate != null){
+                    if (requestDecorate.getRequestHeader() != null){
+                        for (RequestHeader requestHeader : requestDecorate.getRequestHeader()){
+                            builder.addHeader(requestHeader.getKey(), requestHeader.getValue());
+                        }
+                    }
+                   /* if (requestDecorate.getMediaType() != null){
+                        multipartBodybuilder.setType(mediaType);
+                    }*/
+                    MediaType mediaType = MediaType.parse(requestDecorate.getMediaType());
+                    RequestBody requestBody = RequestBody.create(mediaType, requestDecorate.getContent());
+                    multipartBodybuilder.addPart(requestBody);
+
+                }else if (requestParameters != null){
+                    multipartBodybuilder.setType(MultipartBody.FORM);
+                    for (RequestParameter requestParameter : requestParameters){
+                        multipartBodybuilder.addFormDataPart(requestParameter.getKey(), requestParameter.getValue());
+                    }
+                }else {
+                    multipartBodybuilder.setType(MultipartBody.FORM);
+                }
+
                 if (file != null){
                     RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), file);
                     multipartBodybuilder.addPart( Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\"file.jpg\""),fileBody);
@@ -88,16 +141,15 @@ public class Request {
                     multipartBodybuilder.addPart( Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\"file.jpg\""),fileBody);
                 }
 
-                if (requestParameters != null){
-                    for (RequestParameter requestParameter : requestParameters){
-                        multipartBodybuilder.addFormDataPart(requestParameter.getKey(), requestParameter.getValue());
+                if(RemoteService.isPrintLog) {
+                    if (requestDecorate != null){
+                        Log.d("请求参数", requestDecorate.getContent());
+                    }else {
+                        Log.d("请求参数", paramSerialize(requestParameters));
                     }
                 }
-
-                if(RemoteService.isPrintLog) {
-                    Log.d("请求参数", paramSerialize(requestParameters));
-                }
                 RequestBody requestBody = multipartBodybuilder.build();
+
                 builder.post(requestBody);
                 break;
             default:
@@ -141,6 +193,7 @@ public class Request {
             }
         });
     }
+
 
     public static String paramSerialize(ArrayList<RequestParameter> parameters){
         if (parameters == null){

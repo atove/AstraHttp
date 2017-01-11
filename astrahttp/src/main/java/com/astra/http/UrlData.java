@@ -9,7 +9,17 @@ class UrlData {
     private String key;
     private long expires;
     private String netType;
+    private String host;
     private String url;
+    private String DecorateType;
+
+    public String getDecorateType() {
+        return DecorateType;
+    }
+
+    public void setDecorateType(String decorateType) {
+        DecorateType = decorateType;
+    }
 
     public String getKey() {
         return key;
@@ -33,6 +43,14 @@ class UrlData {
 
     public void setNetType(String netType) {
         this.netType = netType;
+    }
+
+    public String getHost() {
+        return host;
+    }
+
+    public void setHost(String host) {
+        this.host = host;
     }
 
     public String getUrl() {

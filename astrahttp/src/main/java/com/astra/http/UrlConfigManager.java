@@ -1,6 +1,7 @@
 package com.astra.http;
 
 import android.content.Context;
+import android.util.Log;
 import android.util.Xml;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -65,7 +66,9 @@ class UrlConfigManager {
                         urlData.setKey(parser.getAttributeValue(null, "Key"));
                         urlData.setExpires(Integer.parseInt(parser.getAttributeValue(null, "Expires")));
                         urlData.setNetType(parser.getAttributeValue(null, "NetType"));
-                        urlData.setUrl(getUrl(parser.getAttributeValue(null, "Host"), parser.getAttributeValue(null, "Url")));
+                        urlData.setUrl(parser.getAttributeValue(null, "Url"));
+                        urlData.setHost(parser.getAttributeValue(null, "Host"));
+                        urlData.setDecorateType(parser.getAttributeValue(null, "DecorateType"));
 
                     }else if (parser.getName().equals("Host")){
                         if (hosts == null){
@@ -89,9 +92,12 @@ class UrlConfigManager {
     }
 
     private String getUrl(String hostKey, String url){
+        Log.d("地址", hostKey  + url);
         if (hosts == null || hosts.isEmpty() || hosts.get(hostKey) == null){
+            Log.d("地址", url);
             return url;
         }else {
+            Log.d("地址", hosts.get(hostKey) + url);
             return hosts.get(hostKey) + url;
         }
     }

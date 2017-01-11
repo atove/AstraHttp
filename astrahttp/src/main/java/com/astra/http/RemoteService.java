@@ -14,8 +14,10 @@ import java.util.HashMap;
 public class RemoteService {
     public static boolean isPrintLog;
     private static RemoteService mInstance;
+    HashMap<String, String> hosts;
     private UrlConfigManager urlConfigManager;
     private static String mPath;
+    HashMap<String, RequestDecorate> requestDecorateHashMap;
 
     public void init (Context context, String path){
         mPath = path;
@@ -49,6 +51,17 @@ public class RemoteService {
     }
 
     public void addHost(String key, String host){
-        urlConfigManager.addHost(key, host);
+        if (hosts == null){
+            hosts = new HashMap<>();
+        }
+        hosts.put(key, host);
+    }
+
+    public void addrequestDecorate(String key, RequestDecorate requestDecorate){
+        if (requestDecorateHashMap == null){
+            requestDecorateHashMap = new HashMap<>();
+        }
+
+        requestDecorateHashMap.put(key, requestDecorate);
     }
 }
