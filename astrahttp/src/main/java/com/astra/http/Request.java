@@ -1,5 +1,6 @@
 package com.astra.http;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import java.io.File;
@@ -96,6 +97,9 @@ public class Request {
         if (RemoteService.isPrintLog){
             Log.d("请求地址" + urlData.getNetType(), host + urlData.getUrl());
         }
+
+
+        
         switch (urlData.getNetType()){
             case "get" :
 
@@ -103,54 +107,7 @@ public class Request {
                 break;
             case "post" :
 
-                MultipartBody.Builder multipartBodybuilder = new MultipartBody.Builder().setType(MultipartBody.FORM);
-
-                if (requestHeaders != null){
-                    for (RequestHeader requestHeader : requestHeaders){
-                        builder.addHeader(requestHeader.getKey(), requestHeader.getValue());
-                    }
-                }
-
-                if (requestDecorate != null){
-                    if (requestDecorate.getRequestHeader() != null){
-                        for (RequestHeader requestHeader : requestDecorate.getRequestHeader()){
-                            builder.addHeader(requestHeader.getKey(), requestHeader.getValue());
-                        }
-                    }
-                   /* if (requestDecorate.getMediaType() != null){
-                        multipartBodybuilder.setType(mediaType);
-                    }*/
-                    MediaType mediaType = MediaType.parse(requestDecorate.getMediaType());
-                    RequestBody requestBody = RequestBody.create(mediaType, requestDecorate.getContent());
-                    multipartBodybuilder.addPart(requestBody);
-
-                }else if (requestParameters != null){
-                    multipartBodybuilder.setType(MultipartBody.FORM);
-                    for (RequestParameter requestParameter : requestParameters){
-                        multipartBodybuilder.addFormDataPart(requestParameter.getKey(), requestParameter.getValue());
-                    }
-                }else {
-                    multipartBodybuilder.setType(MultipartBody.FORM);
-                }
-
-                if (file != null){
-                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), file);
-                    multipartBodybuilder.addPart( Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\"file.jpg\""),fileBody);
-                }else if (bytes != null){
-                    RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), bytes);
-                    multipartBodybuilder.addPart( Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\"file.jpg\""),fileBody);
-                }
-
-                if(RemoteService.isPrintLog) {
-                    if (requestDecorate != null){
-                        Log.d("请求参数", requestDecorate.getContent());
-                    }else {
-                        Log.d("请求参数", paramSerialize(requestParameters));
-                    }
-                }
-                RequestBody requestBody = multipartBodybuilder.build();
-
-                builder.post(requestBody);
+                builder.post(getBody(builder));
                 break;
             default:
                 Log.e("网络请求", "没有这个方法：" + urlData.getNetType());
@@ -187,9 +144,6 @@ public class Request {
                         Log.d("请求失败", " onResponse() code=" + response.code() + "   reuslt=" + resp);
                     }
                 }
-
-
-
             }
         });
     }
@@ -211,5 +165,56 @@ public class Request {
         }else {
             return p.toString();
         }
+    }
+    private RequestBody getBody(okhttp3.Request.Builder builder){
+        MultipartBody.Builder multipartBodybuilder = new MultipartBody.Builder();
+        RequestBody requestBody = null;
+        if (requestDecorate != null){
+
+            ArrayList<RequestHeader> headers = requestDecorate.getRequestHeader();
+            if (headers != null){
+                for (RequestHeader requestHeader : headers){
+                    builder.addHeader(requestHeader.getKey(), requestHeader.getValue());
+                }
+            }
+
+            MediaType mediaType;
+            if (TextUtils.isEmpty(requestDecorate.getMediaType())){
+                mediaType = MultipartBody.FORM;
+            }else {
+                mediaType = MediaType.parse(requestDecorate.getMediaType());
+            }
+            requestBody = RequestBody.create(mediaType, requestDecorate.getContent());
+        }else{
+
+            if (requestParameters != null){
+                for (RequestParameter requestParameter : requestParameters){
+                    multipartBodybuilder.addFormDataPart(requestParameter.getKey(), requestParameter.getValue());
+                }
+            }
+
+            if (file != null){
+                RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), file);
+                multipartBodybuilder.addPart( Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\"file.jpg\""),fileBody);
+
+            }else if (bytes != null){
+                RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), bytes);
+                multipartBodybuilder.addPart( Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\"file.jpg\""),fileBody);
+            }
+
+            multipartBodybuilder.setType(MultipartBody.FORM);
+            requestBody = multipartBodybuilder.build();
+        }
+
+
+
+        if(RemoteService.isPrintLog) {
+            if (requestDecorate != null){
+                Log.d("请求参数", requestDecorate.getContent());
+            }else {
+                Log.d("请求参数", paramSerialize(requestParameters));
+            }
+        }
+        return requestBody;
     }
 }
