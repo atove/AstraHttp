@@ -168,13 +168,13 @@ public class Request {
     }
     private RequestBody getBody(okhttp3.Request.Builder builder){
         MultipartBody.Builder multipartBodybuilder = new MultipartBody.Builder();
-        RequestBody requestBody = null;
+        RequestBody requestBody;
         if (requestDecorate != null){
 
-            ArrayList<RequestHeader> headers = requestDecorate.getRequestHeader();
+            HashMap<String, String> headers = requestDecorate.getRequestHeader();
             if (headers != null){
-                for (RequestHeader requestHeader : headers){
-                    builder.addHeader(requestHeader.getKey(), requestHeader.getValue());
+                for (String key : headers.keySet()) {
+                    builder.addHeader(key, headers.get(key));
                 }
             }
 

@@ -1,6 +1,7 @@
 package com.astra.http;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 /**
  * Created by Astra on 17/1/10.
@@ -8,10 +9,10 @@ import java.util.ArrayList;
 
 public abstract class RequestDecorate {
     protected ArrayList<RequestParameter> requestParameters;
-    private ArrayList<RequestHeader> requestHeaders;
+    private HashMap<String, String> requestHeaders;
     public abstract String getMediaType();
     public abstract String getContent();
-    public ArrayList<RequestHeader> getRequestHeader(){
+    public HashMap<String, String> getRequestHeader(){
         return requestHeaders;
     }
     public void setRequestParameters(ArrayList<RequestParameter> requestParameters){
@@ -19,9 +20,9 @@ public abstract class RequestDecorate {
     }
     protected void addRequestHeader(String key, String value){
         if (requestHeaders == null){
-            requestHeaders = new ArrayList<>();
+            requestHeaders = new HashMap<>();
         }
-        requestHeaders.add(new RequestHeader(key, value));
+        requestHeaders.put(key, value);
     }
 
 }
