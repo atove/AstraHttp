@@ -106,14 +106,27 @@ public class Request {
                 builder.get();
                 break;
             case "post" :
-
                 builder.post(getBody(builder));
+                break;
+
+            case "put" :
+                builder.put(getBody(builder));
+                break;
+            case "del" :
+                builder.delete(getBody(builder));
                 break;
             default:
                 Log.e("网络请求", "没有这个方法：" + urlData.getNetType());
                 break;
         }
         final okhttp3.Request request = builder.build();
+        if (RemoteService.isPrintLog){
+            Headers headers = request.headers();
+            for (int i = 0; i < headers.size(); i++){
+                Log.d("请求头", headers.name(i) + "  : " + headers.value(i));
+            }
+        }
+
         Call call = okHttpClient.newCall(request);
         call.enqueue(new Callback() {
             @Override

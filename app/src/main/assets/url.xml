@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<url>
+    <!--登录-->
+    <Node
+        Key="login"
+        Expires="0"
+        NetType="post"
+        Host="MainHost"
+        DecorateType="json"
+        Url="/api/user/login"
+    />
+
+</url>

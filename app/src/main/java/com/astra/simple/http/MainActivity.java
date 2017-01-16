@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.TelephonyManager;
 import android.util.Log;
+import android.view.View;
 
 import com.astra.http.RemoteService;
 import com.astra.http.RequestCallback;
@@ -21,22 +22,7 @@ public class MainActivity extends AppCompatActivity {
         RemoteService.getInstance().addrequestDecorate("json", new JsonRequest());
         RemoteService.getInstance().isPrintLog(true);
 
-        RemoteService.getInstance().invoke("login")
-                .addParam("loginname", "17090020673")
-                .addParam("password", "ls123456")
-                .addParam("deviceId", getUUID())
-                .setRequestCall(new RequestCallback() {
-                    @Override
-                    public void onSuccess(String content) {
-                        Log.d("1234", content);
-                    }
 
-                    @Override
-                    public void onFail(int code, String errorMessage) {
-
-                    }
-                })
-                .start();
         getTime();
     }
     public String getUUID() {
@@ -61,5 +47,28 @@ public class MainActivity extends AppCompatActivity {
 
         return str;
 
+    }
+
+    public void onClick(View view) {
+        switch (view.getId()){
+            case R.id.btn_login:
+                RemoteService.getInstance().invoke("login")
+                        .addParam("loginname", "17090020673")
+                        .addParam("password", "ls123456")
+                        .addParam("deviceId", getUUID())
+                        .setRequestCall(new RequestCallback() {
+                            @Override
+                            public void onSuccess(String content) {
+                                Log.d("1234", content);
+                            }
+
+                            @Override
+                            public void onFail(int code, String errorMessage) {
+
+                            }
+                        })
+                        .start();
+                break;
+        }
     }
 }
