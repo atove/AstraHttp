@@ -53,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()){
             case R.id.btn_login:
                 RemoteService.getInstance().invoke("login")
+                        .addUrlSuffix("183874777287834")
                         .addParam("loginname", "17090020673")
                         .addParam("password", "ls123456")
                         .addParam("deviceId", getUUID())

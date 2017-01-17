@@ -59,6 +59,21 @@ public class Request {
         return this;
     }
 
+    private ArrayList<String> urlSuffixs;
+    public Request addUrlSuffix(String name) {
+
+        if (urlSuffixs == null){
+            urlSuffixs = new ArrayList<>();
+        }
+        urlSuffixs.add(name);
+        return this;
+    }
+
+    public Request addParam(String name, int value) {
+        addParam(name, String.valueOf(value));
+        return this;
+    }
+
     public Request addParam(String name, String value) {
         if (requestParameters == null){
             requestParameters = new ArrayList<>();
@@ -92,17 +107,23 @@ public class Request {
             requestDecorate.setRequestParameters(requestParameters);
         }
         OkHttpClient okHttpClient = new OkHttpClient();
-        okhttp3.Request.Builder builder = new okhttp3.Request.Builder()
-                .url(host + urlData.getUrl());
-        if (RemoteService.isPrintLog){
-            Log.d("请求地址" + urlData.getNetType(), host + urlData.getUrl());
+        String url = host + urlData.getUrl();
+        if (urlSuffixs != null){
+            for (String urlSuffix : urlSuffixs){
+                if (!TextUtils.isEmpty(urlSuffix)){
+                    url += "/" + urlSuffix;
+                }
+            }
+
         }
 
+        okhttp3.Request.Builder builder = new okhttp3.Request.Builder()
+                .url(url);
 
         
         switch (urlData.getNetType()){
             case "get" :
-
+                getBody(builder);
                 builder.get();
                 break;
             case "post" :
@@ -120,7 +141,12 @@ public class Request {
                 break;
         }
         final okhttp3.Request request = builder.build();
+
         if (RemoteService.isPrintLog){
+        }
+
+        if (RemoteService.isPrintLog){
+            Log.d("请求地址" + urlData.getNetType(), request.url().toString());
             Headers headers = request.headers();
             for (int i = 0; i < headers.size(); i++){
                 Log.d("请求头", headers.name(i) + "  : " + headers.value(i));
