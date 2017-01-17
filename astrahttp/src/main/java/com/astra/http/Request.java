@@ -5,6 +5,8 @@ import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -114,27 +116,47 @@ public class Request {
                     url += "/" + urlSuffix;
                 }
             }
-
         }
 
-        okhttp3.Request.Builder builder = new okhttp3.Request.Builder()
-                .url(url);
+
+        okhttp3.Request.Builder builder = new okhttp3.Request.Builder();
+                //.url(url);
 
         
         switch (urlData.getNetType()){
             case "get" :
-                getBody(builder);
+                if (requestParameters != null){
+                    int pos = 0;
+                    StringBuilder tempParams = new StringBuilder(url);
+                    for (RequestParameter requestParameter : requestParameters){
+                        if (pos > 0) {
+                            tempParams.append("&");
+                        }else {
+                            tempParams.append("?");
+                        }
+                        try {
+                            tempParams.append(String.format("%s=%s", requestParameter.getKey(), URLEncoder.encode(requestParameter.getValue(), "utf-8")));
+                        } catch (UnsupportedEncodingException e) {
+                            e.printStackTrace();
+                        }
+                        pos++;
+                    }
+                    url = tempParams.toString();
+                }
+
+                builder.url(url);
+                initHeaders(builder.url(url));
                 builder.get();
                 break;
             case "post" :
-                builder.post(getBody(builder));
+                builder.post(getBody(builder.url(url)));
                 break;
 
             case "put" :
-                builder.put(getBody(builder));
+                builder.put(getBody(builder.url(url)));
                 break;
             case "del" :
-                builder.delete(getBody(builder));
+                builder.delete(getBody(builder.url(url)));
                 break;
             default:
                 Log.e("网络请求", "没有这个方法：" + urlData.getNetType());
@@ -205,18 +227,28 @@ public class Request {
             return p.toString();
         }
     }
-    private RequestBody getBody(okhttp3.Request.Builder builder){
-        MultipartBody.Builder multipartBodybuilder = new MultipartBody.Builder();
-        RequestBody requestBody;
-        if (requestDecorate != null){
 
+    private void initHeaders(okhttp3.Request.Builder builder){
+        if (requestHeaders != null){
+            for (RequestHeader requestHeader : requestHeaders){
+                builder.addHeader(requestHeader.getKey(), requestHeader.getValue());
+            }
+        }
+        if (requestDecorate != null){
             HashMap<String, String> headers = requestDecorate.getRequestHeader();
             if (headers != null){
                 for (String key : headers.keySet()) {
                     builder.addHeader(key, headers.get(key));
                 }
             }
+        }
+    }
 
+    private RequestBody getBody(okhttp3.Request.Builder builder){
+        MultipartBody.Builder multipartBodybuilder = new MultipartBody.Builder();
+        RequestBody requestBody;
+        if (requestDecorate != null){
+            initHeaders(builder);
             MediaType mediaType;
             if (TextUtils.isEmpty(requestDecorate.getMediaType())){
                 mediaType = MultipartBody.FORM;

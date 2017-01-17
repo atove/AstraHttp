@@ -4,7 +4,7 @@
     <Node
         Key="login"
         Expires="0"
-        NetType="get"
+        NetType="post"
         Host="MainHost"
         DecorateType="json"
         Url="/api/user/login"
