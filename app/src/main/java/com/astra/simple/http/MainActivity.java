@@ -9,6 +9,7 @@ import android.view.View;
 import com.astra.http.RemoteService;
 import com.astra.http.RequestCallback;
 
+import java.io.File;
 import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
@@ -19,7 +20,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         RemoteService.getInstance().init(this, "url.xml");
         RemoteService.getInstance().addHost("MainHost", "http://hulu.leanapp.cn");
-        RemoteService.getInstance().addrequestDecorate("json", new JsonRequest());
+        RemoteService.getInstance().addrequestDecorate("from", new FromRequest());
         RemoteService.getInstance().isPrintLog(true);
 
 
@@ -52,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_login:
-                RemoteService.getInstance().invoke("login")
+                /*RemoteService.getInstance().invoke("login")
                         //.addUrlSuffix("183874777287834")
                         .addParam("loginname", "17090020673")
                         .addParam("password", "ls123456")
@@ -68,7 +69,24 @@ public class MainActivity extends AppCompatActivity {
 
                             }
                         })
+                        .start();*/
+
+                RemoteService.getInstance()
+                        .invoke("file")
+                        .setFile(new File("file:///storage/emulated/0/Pictures/Screenshots/Screenshot_20160923-165949.png"))
+                        .setRequestCall(new RequestCallback() {
+                            @Override
+                            public void onSuccess(String content) {
+                                Log.d("1234", content);
+                            }
+
+                            @Override
+                            public void onFail(int code, String errorMessage) {
+
+                            }
+                        })
                         .start();
+
                 break;
         }
     }

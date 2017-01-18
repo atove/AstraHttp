@@ -10,4 +10,8 @@
         Url="/api/user/login"
     />
 
+    <!--上传图片-->
+    <Node DecorateType="from" Expires="0" Host="MainHost" Key="file" NetType="post"
+        Url="/api/resource/coverImage" />
+
 </url>

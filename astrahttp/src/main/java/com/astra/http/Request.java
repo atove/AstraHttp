@@ -108,7 +108,7 @@ public class Request {
         this.fileType = fileType;
         return this;
     }
-    private String fileName = "image/png";//文件类型，默认图片
+    private String fileName = "image.jpg";//文件名称
     public Request setFileName(String fileName){
         this.fileName = fileName;
         return this;
@@ -300,7 +300,7 @@ public class Request {
         }
 
         if(RemoteService.isPrintLog) {
-            if (requestDecorate != null){
+            if (requestDecorate != null && requestDecorate.getContent() != null){
                 Log.d("请求参数", requestDecorate.getContent());
             }else {
                 Log.d("请求参数", paramSerialize(requestParameters));
