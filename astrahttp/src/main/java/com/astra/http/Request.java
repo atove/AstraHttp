@@ -99,10 +99,21 @@ public class Request {
         return this;
     }
     private byte[] bytes;
-    public Request setData(byte[] data){
+    public Request setFile(byte[] data){
         bytes = data;
         return this;
     }
+    private String fileType = "image/png";//文件类型，默认图片
+    public Request setFileType(String fileType){
+        this.fileType = fileType;
+        return this;
+    }
+    private String fileName = "image/png";//文件类型，默认图片
+    public Request setFileName(String fileName){
+        this.fileName = fileName;
+        return this;
+    }
+
 
     public void start(){
         if (requestDecorate != null){
@@ -246,38 +257,47 @@ public class Request {
 
     private RequestBody getBody(okhttp3.Request.Builder builder){
         MultipartBody.Builder multipartBodybuilder = new MultipartBody.Builder();
+        initHeaders(builder);
         RequestBody requestBody;
-        if (requestDecorate != null){
-            initHeaders(builder);
-            MediaType mediaType;
-            if (TextUtils.isEmpty(requestDecorate.getMediaType())){
-                mediaType = MultipartBody.FORM;
-            }else {
-                mediaType = MediaType.parse(requestDecorate.getMediaType());
-            }
-            requestBody = RequestBody.create(mediaType, requestDecorate.getContent());
-        }else{
-
+        if (file != null || bytes != null){//上传文件
             if (requestParameters != null){
                 for (RequestParameter requestParameter : requestParameters){
                     multipartBodybuilder.addFormDataPart(requestParameter.getKey(), requestParameter.getValue());
                 }
             }
-
+            RequestBody fileBody;
             if (file != null){
-                RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), file);
-                multipartBodybuilder.addPart( Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\"file.jpg\""),fileBody);
-
-            }else if (bytes != null){
-                RequestBody fileBody = RequestBody.create(MediaType.parse("image/png"), bytes);
-                multipartBodybuilder.addPart( Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\"file.jpg\""),fileBody);
+                fileBody = RequestBody.create(MediaType.parse(fileType), file);
+            }else {
+                fileBody = RequestBody.create(MediaType.parse(fileType), bytes);
             }
-
+            multipartBodybuilder.addPart( Headers.of("Content-Disposition", "form-data; name=\"file\";filename=\""+fileName+"\""),fileBody);
             multipartBodybuilder.setType(MultipartBody.FORM);
             requestBody = multipartBodybuilder.build();
+        }else {
+            MediaType mediaType = null;
+            String content = null;
+            if (requestDecorate != null){
+                if (!TextUtils.isEmpty(requestDecorate.getMediaType())){
+                    mediaType = MediaType.parse(requestDecorate.getMediaType());
+                }
+                content = requestDecorate.getContent();
+            }
+            if (mediaType == null){
+                mediaType = MultipartBody.FORM;
+            }
+            if (TextUtils.isEmpty(content) && requestParameters != null){
+                FormBody.Builder forBodyBuilder = new FormBody.Builder();
+                for (RequestParameter p : requestParameters){
+                    forBodyBuilder.add(p.getKey(), p.getValue());
+                }
+                requestBody = forBodyBuilder.build();
+
+            }else {
+                requestBody = RequestBody.create(mediaType, content == null ? "" : content);
+            }
+
         }
-
-
 
         if(RemoteService.isPrintLog) {
             if (requestDecorate != null){
