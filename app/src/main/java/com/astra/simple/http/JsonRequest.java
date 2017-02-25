@@ -34,12 +34,12 @@ public class JsonRequest extends RequestDecorate {
                 for (RequestParameter parameter : requestParameters){
                     sb.append(parameter.getKey());
                     sb.append("\":");
-                    sb.append("\"");
-                    sb.append(parameter.getValue());
-                    sb.append("\",\"");
+                    sb.append(parameter.getValueOfJson());
+                    sb.append(",\"");
                 }
                 String s = sb.substring(0, sb.length() - 2);
                 s += "}";
+                Log.d("请求参数", s);
                 return s;
             }
         }

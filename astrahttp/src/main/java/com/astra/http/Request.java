@@ -72,7 +72,11 @@ public class Request {
     }
 
     public Request addParam(String name, int value) {
-        addParam(name, String.valueOf(value));
+        if (requestParameters == null){
+            requestParameters = new ArrayList<>();
+        }
+        RequestParameter parameter = new RequestParameter(name, value);
+        requestParameters.add(parameter);
         return this;
     }
 

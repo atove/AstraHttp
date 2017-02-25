@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
         RemoteService.getInstance().init(this, "url.xml");
         RemoteService.getInstance().addHost("MainHost", "http://hulu.leanapp.cn");
         RemoteService.getInstance().addrequestDecorate("from", new FromRequest());
+        RemoteService.getInstance().addrequestDecorate("json", new JsonRequest());
         RemoteService.getInstance().isPrintLog(true);
 
 
@@ -53,10 +54,11 @@ public class MainActivity extends AppCompatActivity {
     public void onClick(View view) {
         switch (view.getId()){
             case R.id.btn_login:
-                /*RemoteService.getInstance().invoke("login")
+                RemoteService.getInstance().invoke("login")
                         //.addUrlSuffix("183874777287834")
                         .addParam("loginname", "17090020673")
                         .addParam("password", "ls123456")
+                        .addParam("test", 123)
                         .addParam("deviceId", getUUID())
                         .setRequestCall(new RequestCallback() {
                             @Override
@@ -69,9 +71,9 @@ public class MainActivity extends AppCompatActivity {
 
                             }
                         })
-                        .start();*/
+                        .start();
 
-                RemoteService.getInstance()
+                /*RemoteService.getInstance()
                         .invoke("file")
                         .setFile(new File("file:///storage/emulated/0/Pictures/Screenshots/Screenshot_20160923-165949.png"))
                         .setRequestCall(new RequestCallback() {
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
                             }
                         })
-                        .start();
+                        .start();*/
 
                 break;
         }

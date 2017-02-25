@@ -7,7 +7,7 @@ package com.astra.http;
 
 public class RequestParameter {
     private String key;
-    private String value;
+    private Object value;
 
     protected RequestParameter(String key, String value) {
         this.key = key;
@@ -16,7 +16,7 @@ public class RequestParameter {
 
     protected RequestParameter(String key, int value) {
         this.key = key;
-        this.value = String.valueOf(value);
+        this.value = value;
     }
 
     public String getKey() {
@@ -24,6 +24,15 @@ public class RequestParameter {
     }
 
     public String getValue() {
-        return value;
+        return String.valueOf(value);
+    }
+
+    public String getValueOfJson() {
+        if (value instanceof String){
+            return "\"" + value + "\"";
+        }else if (value instanceof Integer){
+            return String.valueOf(value);
+        }
+        return String.valueOf(value);
     }
 }
