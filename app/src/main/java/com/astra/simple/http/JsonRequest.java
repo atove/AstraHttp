@@ -39,7 +39,6 @@ public class JsonRequest extends RequestDecorate {
                 }
                 String s = sb.substring(0, sb.length() - 2);
                 s += "}";
-                Log.d("请求参数", s);
                 return s;
             }
         }
