@@ -63,7 +63,9 @@ public class Request {
 
     private ArrayList<String> urlSuffixs;
     public Request addUrlSuffix(String name) {
-
+        if (name == null){
+            return this;
+        }
         if (urlSuffixs == null){
             urlSuffixs = new ArrayList<>();
         }
@@ -81,6 +83,9 @@ public class Request {
     }
 
     public Request addParam(String name, String value) {
+        if (value == null || name == null){
+            return this;
+        }
         if (requestParameters == null){
             requestParameters = new ArrayList<>();
         }
@@ -89,6 +94,9 @@ public class Request {
         return this;
     }
     public Request addHeader(String name, String value) {
+        if (value == null || name == null){
+            return this;
+        }
         if (requestHeaders == null){
             requestHeaders = new ArrayList<>();
         }
