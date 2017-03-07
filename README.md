@@ -3,7 +3,7 @@
 [![](https://jitpack.io/v/atove/AstraHttp.svg)](https://jitpack.io/#atove/AstraHttp)
 
 # AstraHttp
-一个优雅的 http 网络请求框架，用极简的代码实现复杂的网络请求。
+一个优雅的 http 网络请求框架，用极简的代码实现复杂的网络请求。  
 基于 OkHttp3 封装
 
 ##如何使用
@@ -25,7 +25,7 @@
 用[这里](https://github.com/atove/AstraHttp/releases)的真实发行版本号, 替换 VERSION_CODE
 
 ##编写 MobileAPI 文件
-在 assets 文件夹新建 url.xml 文件
+在 assets 文件夹新建 url.xml 文件  
 然后在 url.xml 文件中添加
 ```
 <?xml version="1.0" encoding="utf-8"?>
@@ -65,7 +65,7 @@ RemoteService.getInstance().isPrintLog(true);
 ```
 
 ##自定义Request
-继承 RequestDecorate 可以实现对请求的统一处理。
+继承 RequestDecorate 可以实现对请求的统一处理。  
 例如 FromRequest ：
 ```
 public class FromRequest extends RequestDecorate {
@@ -115,7 +115,7 @@ RemoteService.getInstance().invoke("login")
         .start();
 ```
 ##请求回调
-继承 RequestCallback 对返回的数据进行统一处理
+继承 RequestCallback 对返回的数据进行统一处理  
 例如 JsonRequestCallBack ：
 ```
 public abstract class JsonRequestCallBack extends BaseRequestCallBack {
