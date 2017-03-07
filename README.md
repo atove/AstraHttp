@@ -46,7 +46,7 @@
         Expires="0"
         NetType="post"
         Host="MainHost"
-        DecorateType="from"  
+        DecorateType="from"
         Url="/api/resource/coverImage" />
 
 </url>
@@ -65,7 +65,7 @@ RemoteService.getInstance().isPrintLog(true);
 ```
 
 ##自定义Request
-继承 RequestDecorate 可以实现对请求的统一处理.
+继承 RequestDecorate 可以实现对请求的统一处理。
 例如 FromRequest ：
 ```
 public class FromRequest extends RequestDecorate {
@@ -93,26 +93,26 @@ public class FromRequest extends RequestDecorate {
 ##发起请求
 ```
 RemoteService.getInstance().invoke("login")
-                        //添加 url 后缀，会拼接在 url 后边，用 / 分隔，非必须，可添加多个
-                        .addUrlSuffix("xxxxxx")
-                        //添加参数，可添加多个，value 可以是 String、int
-                        .addParam("loginname", "xxx")
-                        .addParam("password", "xxx")
-                        //上传文件，只能单个文件上传
-                        .setFile(new File("PATH"))
-                        //请求回调
-                        .setRequestCall(new RequestCallback() {
-                            @Override
-                            public void onSuccess(String content) {
-                                Log.d("请求成功", content);
-                            }
+        //添加 url 后缀，会拼接在 url 后边，用 / 分隔，非必须，可添加多个
+        .addUrlSuffix("xxxxxx")
+        //添加参数，可添加多个，value 可以是 String、int
+        .addParam("loginname", "xxx")
+        .addParam("password", "xxx")
+        //上传文件，只能单个文件上传
+        .setFile(new File("PATH"))
+        //请求回调
+        .setRequestCall(new RequestCallback() {
+            @Override
+            public void onSuccess(String content) {
+                Log.d("请求成功", content);
+            }
 
-                            @Override
-                            public void onFail(int code, String errorMessage) {
+            @Override
+            public void onFail(int code, String errorMessage) {
 
-                            }
-                        })
-                        .start();
+            }
+        })
+        .start();
 ```
 ##请求回调
 继承 RequestCallback 对返回的数据进行统一处理
