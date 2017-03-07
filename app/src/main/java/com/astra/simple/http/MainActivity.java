@@ -18,10 +18,14 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        //注册MobileAPI 文件
         RemoteService.getInstance().init(this, "url.xml");
+        //注册Host，对应url.xml 中Host
         RemoteService.getInstance().addHost("MainHost", "http://hulu.leanapp.cn");
+        //注册Request，对Request进行统一处理，对应url.xml 中DecorateType
         RemoteService.getInstance().addrequestDecorate("from", new FromRequest());
         RemoteService.getInstance().addrequestDecorate("json", new JsonRequest());
+        //是否打印Log
         RemoteService.getInstance().isPrintLog(true);
 
 
@@ -55,11 +59,14 @@ public class MainActivity extends AppCompatActivity {
         switch (view.getId()){
             case R.id.btn_login:
                 RemoteService.getInstance().invoke("login")
-                        //.addUrlSuffix("183874777287834")
-                        .addParam("loginname", "17090020673")
-                        .addParam("password", "ls123456")
-                        .addParam("test", 123)
-                        .addParam("deviceId", getUUID())
+                        //添加 url 后缀，会拼接在 url 后边，用 / 分隔，非必须，可添加多个
+                        .addUrlSuffix("xxxxx")
+                        //添加参数，可添加多个，value 可以是 String、int
+                        .addParam("loginname", "xxx")
+                        .addParam("password", "xxx")
+                        //上传文件，只能单个文件上传
+                        .setFile(new File("PATH"))
+                        //请求回调
                         .setRequestCall(new RequestCallback() {
                             @Override
                             public void onSuccess(String content) {

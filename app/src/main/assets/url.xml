@@ -11,7 +11,12 @@
     />
 
     <!--上传图片-->
-    <Node DecorateType="from" Expires="0" Host="MainHost" Key="file" NetType="post"
+    <Node
+        Key="file"
+        Expires="0"
+        NetType="post"
+        Host="MainHost"
+        DecorateType="from"
         Url="/api/resource/coverImage" />
 
 </url>

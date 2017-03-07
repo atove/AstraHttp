@@ -59,7 +59,7 @@ ext {
     retrofit = "com.squareup.retrofit2:retrofit:${retrofitVersion}"
     gsonForRetrofit = "com.squareup.retrofit2:converter-gson:${retrofitVersion}"
     rxJavaForRetrofit = "com.squareup.retrofit2:adapter-rxjava:${retrofitVersion}"
-    okhttp = 'com.squareup.okhttp3:okhttp:3.4.1'
+    okhttp = 'com.squareup.okhttp3:okhttp:3.6.0'
     volley = "com.mcxiaoke.volley:library:1.0.19"
 
     //数据库
