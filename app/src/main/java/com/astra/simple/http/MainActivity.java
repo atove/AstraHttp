@@ -9,6 +9,8 @@ import android.view.View;
 import com.astra.http.RemoteService;
 import com.astra.http.RequestCallback;
 
+import org.json.JSONArray;
+
 import java.io.File;
 import java.util.UUID;
 
@@ -56,7 +58,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onClick(View view) {
+        JSONArray array = new JSONArray();
+        array.put("59016a1e1b69e60058bbc823");
+        array.put("59c3659d570c35004413f590");
+        array.put("5923dca6a0bb9f005f70d6e1");
         switch (view.getId()){
+
+
             case R.id.btn_login:
                 RemoteService.getInstance().invoke("login")
                         //添加 url 后缀，会拼接在 url 后边，用 / 分隔，非必须，可添加多个
@@ -64,6 +72,7 @@ public class MainActivity extends AppCompatActivity {
                         //添加参数，可添加多个，value 可以是 String、int
                         .addParam("loginname", "xxx")
                         .addParam("password", "xxx")
+                        .addParam("tags", array)
                         //上传文件，只能单个文件上传
                         .setFile(new File("PATH"))
                         //请求回调

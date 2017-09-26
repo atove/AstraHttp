@@ -93,6 +93,18 @@ public class Request {
         requestParameters.add(parameter);
         return this;
     }
+
+    public Request addParam(String name, Object value) {
+        if (value == null || name == null){
+            return this;
+        }
+        if (requestParameters == null){
+            requestParameters = new ArrayList<>();
+        }
+        RequestParameter parameter = new RequestParameter(name, value);
+        requestParameters.add(parameter);
+        return this;
+    }
     public Request addHeader(String name, String value) {
         if (value == null || name == null){
             return this;

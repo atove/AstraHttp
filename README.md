@@ -2,11 +2,11 @@
 
 [![](https://jitpack.io/v/atove/AstraHttp.svg)](https://jitpack.io/#atove/AstraHttp)
 
-# AstraHttp
+# AstraHttp  
 一个优雅的 http 网络请求框架，用极简的代码实现复杂的网络请求。  
 基于 OkHttp3 封装
 
-##如何使用
+## 如何使用  
 先在 build.gradle 的 repositories 添加:
 ```
 	allprojects {
@@ -24,7 +24,7 @@
 ```
 用[这里](https://github.com/atove/AstraHttp/releases)的真实发行版本号, 替换 VERSION_CODE
 
-##编写 MobileAPI 文件
+## 编写 MobileAPI 文件  
 在 assets 文件夹新建 url.xml 文件  
 然后在 url.xml 文件中添加
 ```
@@ -64,7 +64,7 @@ RemoteService.getInstance().addrequestDecorate("json", new JsonRequest());
 RemoteService.getInstance().isPrintLog(true);
 ```
 
-##自定义Request
+## 自定义Request
 继承 RequestDecorate 可以实现对请求的统一处理。  
 例如 FromRequest ：
 ```
@@ -90,7 +90,7 @@ public class FromRequest extends RequestDecorate {
     }
 }
 ```
-##发起请求
+## 发起请求
 ```
 RemoteService.getInstance().invoke("login")
         //添加 url 后缀，会拼接在 url 后边，用 / 分隔，非必须，可添加多个
@@ -114,7 +114,7 @@ RemoteService.getInstance().invoke("login")
         })
         .start();
 ```
-##请求回调
+## 请求回调
 继承 RequestCallback 对返回的数据进行统一处理  
 例如 JsonRequestCallBack ：
 ```
@@ -151,5 +151,5 @@ public abstract class JsonRequestCallBack extends BaseRequestCallBack {
 
 >**功能正在完善中，并持续更新！有问题欢迎留言**
 
-#感谢
+# 感谢  
 [OkHttp](http://square.github.io/okhttp/)

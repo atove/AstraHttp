@@ -19,6 +19,11 @@ public class RequestParameter {
         this.value = value;
     }
 
+    protected RequestParameter(String key, Object value) {
+        this.key = key;
+        this.value = value;
+    }
+
     public String getKey() {
         return key;
     }
@@ -33,6 +38,6 @@ public class RequestParameter {
         }else if (value instanceof Integer){
             return String.valueOf(value);
         }
-        return String.valueOf(value);
+        return value.toString();
     }
 }

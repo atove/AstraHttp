@@ -9,3 +9,9 @@
 .externalNativeBuild
 vcs.xml
 misc.xml
+.idea/markdown-navigator
+.idea/markdown-navigator.xml
+app/libs/
+app/src/main/res/drawable/
+astrahttp/libs/
+astrahttp/src/main/res/drawable/
