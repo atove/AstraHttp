@@ -13,6 +13,7 @@ import java.util.HashMap;
 
 public class RemoteService {
     public static boolean isPrintLog;
+    static int timeout = 10;//超时时间，默认10秒
     private static RemoteService mInstance;
     HashMap<String, String> hosts;
     private UrlConfigManager urlConfigManager;
@@ -28,6 +29,9 @@ public class RemoteService {
         urlConfigManager = new UrlConfigManager(context, path);
     }
 
+    private static class Instance{
+        final static RemoteService INSTANCE = new RemoteService();
+    }
     public static RemoteService getInstance(){
         if (mInstance == null) {
             synchronized (UrlConfigManager.class) {
@@ -36,7 +40,7 @@ public class RemoteService {
                 }
             }
         }
-        return mInstance;
+        return Instance.INSTANCE;
     }
     public void isPrintLog(Boolean isLog){
         isPrintLog = isLog;
@@ -63,5 +67,20 @@ public class RemoteService {
         }
 
         requestDecorateHashMap.put(key, requestDecorate);
+    }
+
+    /**
+     * 设置超时时间 单位：秒
+     */
+    public void setTimeout(int timeout){
+        RemoteService.timeout = timeout;
+    }
+
+    /**
+     * 根据 tag 取消请求
+     * @param tag
+     */
+    public void cancelAsTag(Object tag){
+        OkHttpUtils.cancelAsTag(tag);
     }
 }

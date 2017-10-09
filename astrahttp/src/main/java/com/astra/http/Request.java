@@ -25,13 +25,14 @@ import okhttp3.Response;
  * Created by Astra on 16/12/1.
  */
 public class Request {
-    private String tag;
+    private Object tag;
     private RequestCallback requestCall;
     private UrlData urlData;
     private ArrayList<RequestParameter> requestParameters;
     private ArrayList<RequestHeader> requestHeaders;
     private RequestDecorate requestDecorate;
     private String host;
+    private Call call;
 
     public void setRequestDecorate(RequestDecorate requestDecorate) {
         this.requestDecorate = requestDecorate;
@@ -47,12 +48,13 @@ public class Request {
         }
     }
 
-    public String getTag() {
+    public Object getTag() {
         return tag;
     }
 
-    public Request setTag(String tag) {
+    public Request setTag(Object tag) {
         this.tag = tag;
+        OkHttpUtils.addRequest(this);
         return this;
     }
 
@@ -139,11 +141,10 @@ public class Request {
     }
 
 
-    public void start(){
+    public Request start(){
         if (requestDecorate != null){
             requestDecorate.setRequestParameters(requestParameters);
         }
-        OkHttpClient okHttpClient = new OkHttpClient();
         String url = host + urlData.getUrl();
         if (urlSuffixs != null){
             for (String urlSuffix : urlSuffixs){
@@ -210,12 +211,18 @@ public class Request {
             }
         }
 
-        Call call = okHttpClient.newCall(request);
+        call = OkHttpUtils.getOkHttpClient().newCall(request);
         call.enqueue(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
+                OkHttpUtils.removeRequest(Request.this);
+                String message = e.getMessage();
                 if (requestCall != null){
-                    requestCall.onFail(-1, e.getMessage());
+                    if ("Canceled".equals(message)){
+                        requestCall.onCancel();
+                    }else {
+                        requestCall.onFail(-1, e.getMessage());
+                    }
                 }
                 if(RemoteService.isPrintLog) {
                     Log.d("请求失败", "onFailure() e=" + e);
@@ -224,6 +231,7 @@ public class Request {
             }
             @Override
             public void onResponse(Call call, final Response response) throws IOException {
+                OkHttpUtils.removeRequest(Request.this);
                 String resp = response.body().string();
                 if (response.code() == 200){
                     if (requestCall != null){
@@ -242,6 +250,7 @@ public class Request {
                 }
             }
         });
+        return this;
     }
 
 
@@ -331,5 +340,19 @@ public class Request {
             }
         }
         return requestBody;
+    }
+
+    public void cancel(){
+        if (call != null && call.isExecuted() && !call.isCanceled()){
+            call.cancel();
+        }
+    }
+
+    public void logCallState(){
+        if (call != null){
+            Log.d("call状态", "isExecuted:" + call.isExecuted() + "   isCanceled:" + call.isCanceled());
+        }else {
+            Log.d("call状态", "call为空");
+        }
     }
 }

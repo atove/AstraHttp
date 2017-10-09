@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 
 import com.astra.http.RemoteService;
+import com.astra.http.Request;
 import com.astra.http.RequestCallback;
 
 import org.json.JSONArray;
@@ -16,6 +17,7 @@ import java.util.UUID;
 
 public class MainActivity extends AppCompatActivity {
 
+    private Request request;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -29,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         RemoteService.getInstance().addrequestDecorate("json", new JsonRequest());
         //是否打印Log
         RemoteService.getInstance().isPrintLog(true);
+        //设置超时时间 单位：秒
+        RemoteService.getInstance().setTimeout(10);
 
 
         getTime();
@@ -66,7 +70,8 @@ public class MainActivity extends AppCompatActivity {
 
 
             case R.id.btn_login:
-                RemoteService.getInstance().invoke("login")
+                request = RemoteService.getInstance().invoke("login")
+                        .setTag("登录")
                         //添加 url 后缀，会拼接在 url 后边，用 / 分隔，非必须，可添加多个
                         .addUrlSuffix("xxxxx")
                         //添加参数，可添加多个，value 可以是 String、int
@@ -80,14 +85,20 @@ public class MainActivity extends AppCompatActivity {
                             @Override
                             public void onSuccess(String content) {
                                 Log.d("1234", content);
+                                request.logCallState();
                             }
 
                             @Override
                             public void onFail(int code, String errorMessage) {
-
+                                request.logCallState();
                             }
-                        })
-                        .start();
+                        });
+
+                request.start();
+                request.logCallState();
+                //request.cancel();
+                RemoteService.getInstance().cancelAsTag("登录");
+                request.logCallState();
 
                 /*RemoteService.getInstance()
                         .invoke("file")

@@ -62,6 +62,8 @@ RemoteService.getInstance().addrequestDecorate("from", new FromRequest());
 RemoteService.getInstance().addrequestDecorate("json", new JsonRequest());
 //是否打印Log
 RemoteService.getInstance().isPrintLog(true);
+//设置超时时间 单位：秒
+RemoteService.getInstance().setTimeout(10);
 ```
 
 ## 自定义Request
@@ -118,7 +120,7 @@ RemoteService.getInstance().invoke("login")
 继承 RequestCallback 对返回的数据进行统一处理  
 例如 JsonRequestCallBack ：
 ```
-public abstract class JsonRequestCallBack extends BaseRequestCallBack {
+public abstract class JsonRequestCallBack extends RequestCallback {
 
     private JSONObject jsonObject;
     Handler myHandler = new Handler() {
@@ -147,6 +149,15 @@ public abstract class JsonRequestCallBack extends BaseRequestCallBack {
 
     public abstract void success(JSONObject result);
 }
+```
+## 取消请求
+1.直接取消
+```
+request.cancel();
+```
+2.根据 Tag 取消
+```
+RemoteService.getInstance().cancelAsTag(tag);
 ```
 
 >**功能正在完善中，并持续更新！有问题欢迎留言**

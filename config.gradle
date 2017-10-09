@@ -11,8 +11,8 @@ ext {
             applicationId    : "com.qikan.dy.lydingyue",
             minSdkVersion    : 16,
             targetSdkVersion : 22,
-            versionCode      : 30,//
-            versionName      : "4.1.2"
+            versionCode      : 1,//
+            versionName      : "1.0"
     ]
 
     //官方库
