@@ -54,7 +54,9 @@ public class OkHttpUtils {
         List<Request> requests = requestsMap.get(tag);
         if (null != requests){
             for (Request r : requests){
-                r.cancel();
+                if (r != null){
+                    r.cancel();
+                }
             }
             requestsMap.remove(tag);
         }
